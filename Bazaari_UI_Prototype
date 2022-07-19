@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bazaar</title>
+
+    <style>
+        table{
+            font-size: 85px;
+        }
+
+        #num_players{
+            position: absolute;
+            top: 0px;
+            left: 638px;
+            width: 448px;
+            height: 150px;
+            border: 2px solid #969696;
+            background-color: black;
+            color: white;
+            font-weight: 700;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        #logo{
+            position: absolute;
+            top: 0px;
+            left: 1082px;
+            width: 450px;
+            height: 150px;
+            border: 2px solid #969696;
+            text-align: center;
+
+            background: #4c268f;
+            color: #99eeb4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-family: "Avenir Next", sans-serif;
+            font-weight: 900;
+            font-size: 52px;
+            text-transform: uppercase;
+            font-style: italic;
+            letter-spacing: 0.05em;
+            display: inline-block;
+
+            content: attr(filter-content);
+            filter: url(#motion-blur-filter);
+        }
+
+        #fast{
+            position: absolute;
+            top: 0px;
+            left: 1082px;
+            width: 450px;
+            height: 150px;
+            border: 2px solid #969696;
+            background-color: white;
+            text-align: center;
+            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+
+        #display{
+            position: absolute;
+            top: 500px;
+            left: 650px;
+        }
+
+        .tile{
+            width: 
+        }
+
+        .tile{
+            position: absolute;
+            top: 0px;
+            left: 0px;
+        }
+
+        #picid{
+            position: absolute;
+            top: 0px;
+            left: 0px;
+        }
+
+        .btn{
+            background-color: white;
+            border: 1px solid black;
+            font-family: 'Times New Roman', Times, serif;
+            height: 23px;
+        }
+
+        #playerBox{
+            height: 210px;
+            width: 890px;
+            background-color: white;
+            border: 2px solid black;
+            position: absolute;
+            left: 640px;
+            top: 160px;
+            font-size: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <script>
+        var probCount = [];
+        var numThrows;
+        for (i = 0; i < 49; i++) {
+            probCount.push(0);
+        }
+        console.log(probCount);
+        var companiesCurrent = [];
+        var numPlayers;
+        var whoseTurn;
+        var positionVector = [];
+        var directionVector = [];
+        var rawPosition;
+        var GovAssetPrice = 1000; //set government asset price here
+        var playerNames = [];
+        var indi = 0;
+        var perStart = 0;
+        var conStart = 0;
+        var gameLog = ['The recent events of the game will be displayed', 'Press Right Arrow to roll die,', 'Press Up Arrow to transact asset', 'Press ` for help'];
+        var playerConsList = [];
+
+        //var companyList = ["Shock","Shock","Shock","Shock","News","News","News","Lottery","Lottery","Social Lab","Direct Tax","Indirect Tax","Vacation","Go to Asset Freeze Zone","Asset Freeze Zone",19,"Lakshadweep Forest","Pondichery Forest","Ladakh Heavy Machinery","Daman Fossils Ltd",'Madhya Metals Ltd', 'Assam Fossils Ltd', 'Manipur Animals Ltd', 'Uttar Metals Ltd', 'Nagaland Animals Ltd', 'Punjab Crops Ltd', 'Jammu Heavy Machinery Ltd.', 'Jharkhand Forest Ltd', 'Andhra Commercial Housing Ltd', 'Tamil Light Machinery Ltd', 'Kerala Medicine Ltd', 'Bengal Clothing Ltd', 'Andaman Food Ltd', 'Karnataka Light Machinery Ltd', 'Chattisgarh Medicine Ltd', 'Maharashtra Commercial Housing Ltd', 'Odisha Clothing Ltd', 'Sikkim Foods Ltd', 'Gujarat Refineries Ltd', 'Delhi residential Ltd', 'Mizoram Food Ltd', 'Telangana Medicine Ltd', 'Haryana Residential Ltd', 'Uttarakhand Processed Ltd', 'Goa Residetial Ltd', 'Tripura Food Ltd', 'Arunachal Clothing Ltd', 'Himachal Processed Food Ltd', 'Rajasthan Refineries Ltd', 'Meghalaya Clothing Ltd'];
+        var nw = ["https://static.wixstatic.com/media/5f2284_4f6a62c373ca4f8da98b5c043c0fd8ea~mv2.png","https://static.wixstatic.com/media/5f2284_4f6a62c373ca4f8da98b5c043c0fd8ea~mv2.png","https://static.wixstatic.com/media/5f2284_4f6a62c373ca4f8da98b5c043c0fd8ea~mv2.png","https://static.wixstatic.com/media/5f2284_63321e226aa7495face0f5e7990e6526~mv2.png ","https://static.wixstatic.com/media/5f2284_63321e226aa7495face0f5e7990e6526~mv2.png ","https://static.wixstatic.com/media/5f2284_63321e226aa7495face0f5e7990e6526~mv2.png ","https://static.wixstatic.com/media/5f2284_0e8339169af14820849948bf1427ae0f~mv2.png","https://static.wixstatic.com/media/5f2284_41d588fccf464785add29195fdce3091~mv2.png","https://static.wixstatic.com/media/5f2284_8aea86d9cb0d4dcf9208ca0512dd35bb~mv2.png","https://static.wixstatic.com/media/5f2284_32c32e718d5a4224a8af0a290d8861e9~mv2.png","https://static.wixstatic.com/media/5f2284_244b610771b54eed95e97fd1e40e2fab~mv2.png ","https://static.wixstatic.com/media/5f2284_a69658d28f204bec9c2a752f5b211b08~mv2.png","https://static.wixstatic.com/media/5f2284_a18219be5ba64678ad9f0400a1a68452~mv2.png","https://static.wixstatic.com/media/5f2284_946c0abed77a410aab4e0cfd7c72d58e~mv2.png", "https://static.wixstatic.com/media/5f2284_bde1db1746e844f4987edb7d7610d24a~mv2.png ","https://static.wixstatic.com/media/5f2284_b7e0c2199cc94f84a0ce1b9af76e25b8~mv2.png","https://static.wixstatic.com/media/5f2284_adadeb83e6724c1198883ef2da272d42~mv2.png","https://static.wixstatic.com/media/5f2284_38172cc079674618b3a92642fe656ac6~mv2.png"];
+        var companyList = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,"https://static.wixstatic.com/media/5f2284_e4e2fff5e0d84fec90fd66344bb360c5~mv2.png", "https://static.wixstatic.com/media/5f2284_fa9a91fb197a401cbfb642ddc1b964cd~mv2.png", "https://static.wixstatic.com/media/5f2284_9699547f8b534c919fe996fa610fa772~mv2.png", "https://static.wixstatic.com/media/5f2284_7a0b20d62e5c44b2aac951a47b27acaa~mv2.png", "https://static.wixstatic.com/media/5f2284_3b8297a8025e4f3faf17b0128470ed72~mv2.png", "https://static.wixstatic.com/media/5f2284_a396dc7d669e4e23b0b9b835113381ea~mv2.png", "https://static.wixstatic.com/media/5f2284_fca9bc26ae50467991af930621c2b764~mv2.png", "https://static.wixstatic.com/media/5f2284_860026ebf2cf47aba3f74115068fd3f8~mv2.png", "https://static.wixstatic.com/media/5f2284_689a64a95c62493e96901bce5a2c4347~mv2.png", "https://static.wixstatic.com/media/5f2284_d6fe032e5109441bb0850e12d5bdcc22~mv2.png", "https://static.wixstatic.com/media/5f2284_e24fc1c8a7384a1eb0a06bf840bafabb~mv2.png", "https://static.wixstatic.com/media/5f2284_455ebbc43b2440bfa271606de8930204~mv2.png", "https://static.wixstatic.com/media/5f2284_e27233ed85924957979e73d17d49d4cd~mv2.png", "https://static.wixstatic.com/media/5f2284_fa9209875d7e4f17bd8b13d60c65500c~mv2.png", "https://static.wixstatic.com/media/5f2284_0a529eaecafc4125b1c0e35f80c6a429~mv2.png", "https://static.wixstatic.com/media/5f2284_f074540ab5cf4460956647b4443be9b8~mv2.png", "https://static.wixstatic.com/media/5f2284_b77b7dd4e2ad4599b93612cdd3202a13~mv2.png", "https://static.wixstatic.com/media/5f2284_268fa5afa939494db73844873f8182e0~mv2.png", "https://static.wixstatic.com/media/5f2284_4780dbceb2f64fd6b2dd299e43feaf7f~mv2.png ", "https://static.wixstatic.com/media/5f2284_a33905f3951e42efbd333e03c8d31190~mv2.png", "https://static.wixstatic.com/media/5f2284_5c6396fd57f84db3b8fe8d874c89f759~mv2.png", "https://static.wixstatic.com/media/5f2284_7cceafdf048244d19ffad485cdb46649~mv2.png", "https://static.wixstatic.com/media/5f2284_fdd0d76fd09c46419304ec68473d1767~mv2.png", "https://static.wixstatic.com/media/5f2284_2b0317bba3424379b6c7b6a5320b5b2f~mv2.png", "https://static.wixstatic.com/media/5f2284_4245d21d34814ed78369941713747bb5~mv2.png", "https://static.wixstatic.com/media/5f2284_fd77ee3b424049c7aaece8b499a92506~mv2.png", "https://static.wixstatic.com/media/5f2284_24ef3ad2acb9415093f02ca1a5273d05~mv2.png", "https://static.wixstatic.com/media/5f2284_99cb365e852d4692a0ad5f8bfea0dbc7~mv2.png", "https://static.wixstatic.com/media/5f2284_c7faf53c462240039f51f5291234d58f~mv2.png", "https://static.wixstatic.com/media/5f2284_6fc89efac93e40d3abd308d37273fd3e~mv2.png"];
+        var companyCate = [1,1,1,1,1,1,16,16,1,1,1,1,1,4,6,6,7,3,100,2,3,5,2,5,4,7,6,12,8,15,13,14,8,15,12,13,14,10,11,14,15,11,9,11,14,13,9,10,13];
+        var nameList = ['India', 'China', 'Bhutan', 'Sri Lanka', 'Bangladesh', 'Maldives', 'Myanmar', 'Pakistan', 'Afghanistan', 'Nepal', 'Iran', 'Thailand', 'Laos', 'Cambodia', 'Vietnam', 'Indonesia', 'Malaysia', 'Brunei', 'Philippines', 'Singapore', 'Russia', 'USA', 'China', 'Australia', 'Turkey', 'UK', 'France', 'Japan', 'Korea', 'UAE', 'Italy', 'Spain', 'Germany', 'Nigeria', 'Algeria', 'Brazil', 'Peru']
+        var comList = ['', 'Metals', 'Fossils', 'Crops ', 'Animal Products', 'Forest Products', 'Heavy Machinery', 'Light Machinery', 'Processed Products', 'Refinery', 'Residential', 'Commercial Estates', 'Clothing', 'Foods', 'Medicine', 'Bank'];
+        var factList = [];
+        //                                                        ^
+        
+        console.log('companycate length is ' + companyCate.length);
+        console.log('nw has length ' + nw.length);
+        console.log(' companylist has length ' + companyList.length);
+        console.log(companyList[20]);
+
+        /*for (i=0; i<18; i++) {
+            console.log(nw[i] + ', ' + companyCate[i] + ', ' + i);
+        }
+
+        for (i=19; i<49; i++) {
+            console.log(companyList[i] + ', ' + companyCate[i-1] + ', ' + i);
+        }*/
+
+        var randCate = [1];
+        var randList = ["https://static.wixstatic.com/media/5f2284_3575050a8f2f4757a5360686ed54bffa~mv2.png"];
+        while (randList.length < 50) {
+            var x = Math.floor(48.5 * Math.random());
+            if (randList.indexOf(companyList[x]) == -1) {
+                randList.push(companyList[x]);
+            }
+        } 
+
+        for (i=0; i < 18; i++) {
+            var ni = randList.indexOf(i+1);
+            randList[ni] = nw[i];
+        }
+
+        var jh = randList.indexOf(19);
+        randList.splice(jh, 1);
+
+        /*for (i=0; i<49; i++) {
+            var pinw = nw.indexOf(randList[i]);
+            var picl = companyList.indexOf(randList[i]);
+            if ((pinw != -1) & (picl != -1)) {
+                console.log([pinw, picl, randList[i]]);
+            }
+        }*/
+
+        for (i = 0; i < 49; i++) {
+            var itm = randList[i];
+            var nwi = nw.indexOf(itm);
+            var cli = companyList.indexOf(itm);
+            if (nwi != -1) {
+                randCate.push(companyCate[nwi]);
+            }
+            if (cli != -1) {
+                randCate.push(companyCate[cli]);
+            }
+        }
+
+        /*for (i = 0; i < 49; i++) {
+            console.log(randList[i] + ', ' + randCate[i]);
+        }*/
+
+        var nameMover = 0;
+
+        for (i = 0; i < 49; i++) {
+            var gameTile = document.createElement('img');
+            gameTile.id = (i+1) + "gt";
+            gameTile.src = randList[i];
+            gameTile.style.border = "2px solid black"
+            //gameTile.innerHTML = "<img src = " + randList[i] + " height = 85px width = 85px>";
+            //gameTile.style.border = "1px solid #969696";
+            gameTile.style.width = 90 + "px";
+            gameTile.style.height = 90 + "px";
+            //gameTile.style.textAlign = "center";
+            document.body.appendChild(gameTile);
+            document.getElementById((i+1) + "gt").style.position = "absolute";
+
+            var ywala = Math.floor((i+0.8) / 7);
+            var xwala = i - (ywala * 7);
+
+            document.getElementById((i+1) + "gt").style.left = (90 * xwala) + "px";
+            document.getElementById((i+1) + "gt").style.top = (105 * ywala) + "px";
+
+            var tileName = document.createElement('div');
+            tileName.id = (i+1) + "tn";
+            tileName.style.height = "20px";
+            tileName.style.width = "100px";
+            tileName.style.textAlign = "center";
+            tileName.style.fontFamily = "Times New Roman";
+            tileName.style.fontWeight = 650;
+            tileName.style.fontStyle = "italic";
+            tileName.style.fontSize = "10px";
+            var categ = randCate[i] - 1;
+            var companyName = "";
+            if (randCate[i] != 1) {
+                companyName = nameList[nameMover];
+                tileName.innerHTML = companyName + "</br>" + comList[categ];
+                console.log(companyName + ' ' + comList[categ]);
+                companiesCurrent.push(companyName + ' ' + comList[categ]);
+                nameMover = nameMover + 1;
+            }
+
+            if (randCate[i] == 1) {
+                companiesCurrent.push('tile');
+            }
+
+            console.log(companiesCurrent);
+
+            document.body.appendChild(tileName);
+            document.getElementById((i+1) + "tn").style.position = "absolute";
+
+            var ywala = Math.floor((i+0.8) / 7);
+            var xwala = i - (ywala * 7);
+
+            document.getElementById((i+1) + "tn").style.left = (parseInt((90 * xwala)) - parseInt(2)) + "px";
+            document.getElementById((i+1) + "tn").style.top = parseInt((105 * ywala)) + parseInt(70) + "px";
+
+            var quanBox = document.createElement('div');
+            quanBox.id = (i+1) + "qb";
+            quanBox.innerHTML = 10; //quan[i] To set initial quantity in factories
+            quanBox.style.textAlign = "center";
+            quanBox.style.backgroundColor = "white";
+            quanBox.style.color = "#969696";
+            //ownTile.style.border = "1px solid #969696";
+            quanBox.style.height = "15px";
+            quanBox.style.width = "15px";
+            quanBox.style.fontSize = "12px";
+            quanBox.style.border = "2px solid black";
+            quanBox.style.borderRadius = "14px";
+            quanBox.style.backgroundColor = "black";
+            quanBox.style.color = "white";
+
+            if (randCate[i] == 1) {
+                quanBox.innerHTML = "";
+                quanBox.style.backgroundColor = "rgba(255, 165, 0, 0.73)";
+                quanBox.style.border = "none";
+                quanBox.style.height = "0px";
+                quanBox.style.width = "0px";
+            }
+
+            if (randCate[i] == 16) {
+                quanBox.innerHTML = 0;
+                quanBox.style.backgroundColor = "rgba(255, 165, 0, 0.73)";
+                quanBox.style.border = "none";
+                quanBox.style.height = "0px";
+                quanBox.style.width = "0px";
+            }
+
+            document.body.appendChild(quanBox);
+            document.getElementById((i+1) + "qb").style.position = "absolute";
+
+            document.getElementById((i+1) + "qb").style.left = (5 + 90 * xwala) + "px";
+            document.getElementById((i+1) + "qb").style.top = (5 + 105 * ywala) + "px";
+            //document.getElementById((i+1) + "qb").style.border = "2px solid black";
+
+
+            var ownTile = document.createElement('div');
+            ownTile.id = (i+1) + "ot";
+
+            ownTile.style.textAlign = "center";
+            ownTile.style.backgroundColor = "maroon";
+            ownTile.style.color = "white";
+            ownTile.style.border = "2px solid black";
+            ownTile.style.borderRadius = "14px";
+            //ownTile.style.border = "1px solid #969696";
+            ownTile.style.height = "15px";
+            ownTile.style.width = "15px";
+            ownTile.style.fontSize = "12px";
+            ownTile.innerHTML = "G";
+
+            if (randCate[i] == 1) {
+                ownTile.innerHTML = "G";
+                ownTile.style.backgroundColor = "rgba(255, 165, 0, 0.73)";
+                ownTile.style.border = "none";
+                ownTile.style.height = "0px";
+                ownTile.style.width = "0px";
+            }
+
+            document.body.appendChild(ownTile);
+            document.getElementById((i+1) + "ot").style.position = "absolute";
+
+            document.getElementById((i+1) + "ot").style.left = ((90 * (xwala + 1)) - 25) + "px";
+            document.getElementById((i+1) + "ot").style.top = ((105 * ywala) + 5) + "px";
+        }
+
+        function askNames() {
+            if (indi == 1) {
+                    setNumPlayers();
+                }
+
+            if (indi == 0) {
+                numPlayers = document.getElementById("textBox1").value;
+                if (document.getElementById("textBox1").value > 7) {
+                    document.getElementById("popUpStatement").innerHTML = "A maximum of seven players allowed. Try again with a lesser number.";
+                }
+
+                if (document.getElementById("textBox1").value < 8) {
+                    document.getElementById("popUpStatement").innerHTML = "Enter the names of the players";
+                    document.getElementById("popUpStatement").style.left = "582px";
+
+                    document.getElementById("textBox1").style.width = "300px";
+                    document.getElementById("textBox1").style.left = "610px";
+                    document.getElementById("textBox1").style.height = "35px";
+
+                    console.log(document.getElementById("textBox1").value);
+
+                    for (i = 0; i < (document.getElementById("textBox1").value - 1); i++) {
+                        console.log(i+2);
+                        var newTextBox = document.createElement('input');
+                        newTextBox.id = 'textBox' + (i+2);
+                        newTextBox.type = "text";
+                        document.getElementById('textBoxContainer').appendChild(newTextBox);
+                        document.getElementById('textBox' + (i+2)).style = "position: absolute; top: 0px; left: 710px; height: 50px; width: 80px; background-color: wheat; border: 2px solid black; text-align: center; font-size:x-large; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; border-radius: 40px;"
+                        document.getElementById("textBox" + (i+2)).style.width = "300px";
+                        document.getElementById("textBox" + (i+2)).style.left = "610px";
+                        document.getElementById("textBox" + (i+2)).style.height = "35px";
+                        document.getElementById("textBox" + (i+2)).style.top = ((i+1) * 45) + "px";
+                    }
+
+                    document.getElementById('setPlayers').style.top = (320 + (document.getElementById("textBox1").value * 45)) + "px";
+                    document.getElementById('textBox1').value = "";
+
+                    document.getElementById('setPlayers').style.left = "690px";
+
+                    indi = 1;
+                }
+            }
+        }
+
+        function setNumPlayers() {
+            document.getElementById('startPopUp').style.display = "none";
+            
+            document.getElementById("textwala").innerHTML = playerNames[0] + "'s turn.";
+            whoseTurn = 1;
+
+            var colList = ['#8B0B50', '#00688B', '#8B2323', '#00008B', '#008B8B', '#CD661D', 'black'];
+
+            var pieceWidth = 90 / numPlayers;
+            if (numPlayers < 3) {
+                pieceWidth = 30;
+            }
+
+            for (i=0; i < numPlayers; i++) {
+                var playerPiece = document.createElement('div')
+                playerPiece.id = i+1;
+                playerPiece.innerHTML = i + 1;
+                playerPiece.style.backgroundColor = colList[i];
+                playerPiece.style.color = "white";
+                playerPiece.style.border = "2px solid black";
+                if (numPlayers < 10) {
+                    playerPiece.style.width = (0.9 * pieceWidth) + "px";   
+                }
+                if (numPlayers < 6) {
+                    playerPiece.style.height = (0.9 * pieceWidth) + "px";
+                }
+                playerPiece.style.textAlign = "center";
+                document.body.appendChild(playerPiece);
+
+                document.getElementById(i+1).style.position = "absolute";
+                document.getElementById(i+1).style.left = (pieceWidth * i) + (pieceWidth / 3) - 10 + "px";
+                document.getElementById(i+1).style.top = "32px"; //Initially 32, to add 105 for each row
+
+                positionVector.push(1);
+                directionVector.push(1);
+
+                var leftArrow = document.createElement('div');
+                leftArrow.id = "leftArrow" + (i+1);
+                leftArrow.innerHTML = "☚";
+                leftArrow.style.fontSize = "90px";
+                leftArrow.style.fontWeight = "700px";
+                leftArrow.style.display = "none";
+                leftArrow.style.position = "absolute";
+                leftArrow.style.color = "maroon";
+
+                document.body.appendChild(leftArrow);
+
+                var a = document.getElementById("inventory").innerHTML; 
+                a = a + '<tr><td id = ' + ((i * 17) + 1) + 'ic' + ' style = "width:50px;">' + (i+1) + '</td>';
+                for (j = 0; j < 16; j++) {
+                    a = a + '<td id = ' + ((i * 17) + j+2) + 'ic ' + 'style = "width:50px;">0</td>';
+                }
+                a = a + '</tr>';
+
+                document.getElementById("inventory").innerHTML = a;
+
+                document.getElementById(((i * 17) + 16) + 'ic').innerHTML = 18000; //To set initial money
+                document.getElementById(((i * 17) + 17) + 'ic').innerHTML = 50; //To set initial life
+
+                playerConsList.push(0);
+                playerConsList.push(0);
+                playerConsList.push(0);
+                playerConsList.push(0);
+
+            }
+
+            console.log(positionVector);
+
+            for (i = 0; i < numPlayers; i++) {
+                var currentTextBoxID = 'textBox' + (i+1);
+                var currentName = document.getElementById(currentTextBoxID).value;
+                playerNames.push(currentName);
+                document.getElementById(((i * 17) + 1) + 'ic').innerHTML = currentName;
+            }
+
+            console.log(playerNames);
+
+            document.getElementById("playerBox").style.height = (45 + parseInt(numPlayers * 25)) + "px";
+            document.getElementById("playerControl").style.top = (242 + parseInt(numPlayers * 25)) + "px";
+            document.getElementById("tradeManager").style.top = (242 + parseInt(numPlayers * 25)) + "px";
+            document.getElementById("consManager").style.top = (242 + parseInt(numPlayers * 25)) + "px";
+            document.getElementById("logContainer").style.top = (242 + parseInt(numPlayers * 25)) + "px";
+            document.getElementById("menu").style.top = (214 + parseInt(numPlayers * 25)) + "px";
+
+            document.getElementById("logo").innerHTML = "Game Starts!";
+        }
+
+        function updateBoard1() {
+            var dl = gameLog.length - 4;
+            var logContent = gameLog[dl] + '</br>' + gameLog[dl + 1] + '</br>' + gameLog[dl + 2] + '</br>' + gameLog[dl + 3];
+            document.getElementById("lcb").innerHTML = logContent;
+        }
+
+        function rollDice() {
+            diceValue = Math.ceil(6 * Math.random());
+            document.getElementById("diceface").innerHTML = "The number the all powerful die has revealed is " + diceValue + ".";
+            rawPosition = positionVector[whoseTurn - 1] + (directionVector[whoseTurn - 1] * diceValue);
+            console.log('rawposition: ' + rawPosition);
+
+            if (rawPosition > 49) {
+                var x = rawPosition - 49;
+                rawPosition = 49 - x;
+                positionVector[whoseTurn - 1] = rawPosition;
+                directionVector[whoseTurn - 1] = 0 - directionVector[whoseTurn - 1];
+            }
+            if (rawPosition < 1) {
+                var x = (0 - parseInt(rawPosition)) + 1;
+                rawPosition = x;
+                positionVector[whoseTurn - 1] = rawPosition;
+                directionVector[whoseTurn - 1] = 0 - directionVector[whoseTurn - 1]
+            }
+            positionVector[whoseTurn - 1] = rawPosition;
+            console.log(positionVector);
+
+            var ycoor = 20 + (105 * Math.floor((rawPosition - 0.1) / 7)) + ((35/(numPlayers - 1)) * (whoseTurn - 1)); //- 50 + (100/(numPlayers - 1))
+            if (((rawPosition - 7 * Math.floor(rawPosition / 7)) - 1) >= 0) {
+                var xcoor = 40 + ((rawPosition - 7 * Math.floor(rawPosition / 7)) - 1) * 90;
+            }
+            if (((rawPosition - 7 * Math.floor(rawPosition / 7)) - 1) < 0) {
+                var xcoor = 40 + 6 * 90;
+            }
+
+            console.log("turn: " + whoseTurn);
+            console.log(document.getElementById(whoseTurn).style.left);
+
+            document.getElementById(whoseTurn).style.left = xcoor + "px";
+            console.log(document.getElementById(whoseTurn).style.left);
+            document.getElementById(whoseTurn).style.top = ycoor + "px";
+
+            document.getElementById("enterPlayer").innerHTML = "..";
+
+            document.getElementById("notr").style.top = "162px";
+            document.getElementById("notr").style.left = "650px";
+            document.getElementById("notr").style.border = "1px solid black";
+            document.getElementById("notr").style.color = "black";
+
+            for (k=0; k < numPlayers; k++) {
+                console.log(((17 * k) + 1) + "ic");
+                document.getElementById(((17 * k) + 1) + "ic").style.backgroundColor = "white";
+
+                if (document.getElementById(((17 * k) + 17) + "ic").innerHTML < 1) {
+                    document.getElementById(((17 * k) + 1) + "ic").style.backgroundColor = "grey";
+                }
+            }
+
+            document.getElementById(((17 * (whoseTurn - 1)) + 1) + "ic").style.backgroundColor = "maroon";
+
+            var companyName = companiesCurrent[rawPosition - 1];
+            var ownerNameHere = 'govt';
+            console.log('The value is ' + document.getElementById((rawPosition) + "ot").innerHTML);
+            if (document.getElementById((rawPosition ) + "ot").innerHTML > -1) {
+                ownerNameHere = playerNames[document.getElementById((rawPosition) + "ot").innerHTML - 1]
+            }
+            gameLog.push(playerNames[whoseTurn - 1] + ' landed on ' + ownerNameHere + "'s " + companyName);
+            updateBoard1();
+
+            for (i = 0; i < numPlayers; i++) {
+                document.getElementById("leftArrow" + (i+1)).style.color = "blue";
+            }
+
+            document.getElementById("leftArrow" + (whoseTurn)).style.color = "red";
+
+            document.getElementById("metalsi").max = document.getElementById(((17 * (whoseTurn - 1)) + 2) + "ic").innerHTML;
+            document.getElementById("fossili").max = document.getElementById(((17 * (whoseTurn - 1)) + 3) + "ic").innerHTML;
+            document.getElementById("crops i").max = document.getElementById(((17 * (whoseTurn - 1)) + 4) + "ic").innerHTML;
+            document.getElementById("animali").max = document.getElementById(((17 * (whoseTurn - 1)) + 5) + "ic").innerHTML;
+            document.getElementById("foresti").max = document.getElementById(((17 * (whoseTurn - 1)) + 6) + "ic").innerHTML;
+            document.getElementById("heavymi").max = document.getElementById(((17 * (whoseTurn - 1)) + 7) + "ic").innerHTML;
+            document.getElementById("lightmi").max = document.getElementById(((17 * (whoseTurn - 1)) + 8) + "ic").innerHTML;
+            document.getElementById("procesi").max = document.getElementById(((17 * (whoseTurn - 1)) + 9) + "ic").innerHTML;
+            document.getElementById("refinei").max = document.getElementById(((17 * (whoseTurn - 1)) + 10) + "ic").innerHTML;
+            document.getElementById("residei").max = document.getElementById(((17 * (whoseTurn - 1)) + 11) + "ic").innerHTML;
+            document.getElementById("commeri").max = document.getElementById(((17 * (whoseTurn - 1)) + 12) + "ic").innerHTML;
+            document.getElementById("clothii").max = document.getElementById(((17 * (whoseTurn - 1)) + 13) + "ic").innerHTML;
+            document.getElementById("fooditi").max = document.getElementById(((17 * (whoseTurn - 1)) + 14) + "ic").innerHTML;
+            document.getElementById("medicii").max = document.getElementById(((17 * (whoseTurn - 1)) + 15) + "ic").innerHTML;
+
+            document.getElementById("metalsi").value = 0;
+            document.getElementById("fossili").value = 0;
+            document.getElementById("crops i").value = 0;
+            document.getElementById("animali").value = 0;
+            document.getElementById("foresti").value = 0;
+            document.getElementById("heavymi").value = 0;
+            document.getElementById("lightmi").value = 0;
+            document.getElementById("procesi").value = 0;
+            document.getElementById("refinei").value = 0;
+            document.getElementById("residei").value = 0;
+            document.getElementById("commeri").value = 0;
+            document.getElementById("clothii").value = 0;
+            document.getElementById("fooditi").value = 0;
+            document.getElementById("medicii").value = 0;
+
+            probCount[rawPosition] = probCount[rawPosition] + 1;
+        }
+
+        function nextPlayer() {
+            whoseTurn = whoseTurn + 1;
+            if (whoseTurn > numPlayers) {
+                whoseTurn = 1;
+            }
+
+            var nmGnPlayers = 0;
+
+            for (k = 0; i < numPlayers; i++) {
+                if (document.getElementById(((17 * k) + 17) + "ic").innerHTML < 1) {
+                    nmGnPlayers = nmGnPlayers + 1;
+                }
+            }
+
+            var minPlus = 0;
+
+            if (nmGnPlayers < numPlayers) {
+                while (document.getElementById(((17 * (parseInt(whoseTurn) - 1 + parseInt(minPlus))) + 17) + "ic").innerHTML < 1) {
+                    minPlus = minPlus + 1;
+                }
+            }
+
+            whoseTurn = whoseTurn + minPlus;
+
+            if (document.getElementById(((17 * (whoseTurn - 1)) + 17) + "ic").innerHTML < 1) {
+                whoseTurn = whoseTurn + 1;
+            }
+
+            document.getElementById("textwala").innerHTML = playerNames[whoseTurn - 1] + "'s turn. There are " + numPlayers + " players in total.";
+
+            document.getElementById((17 * (whoseTurn)) + "ic").innerHTML = document.getElementById((17 * (whoseTurn)) + "ic").innerHTML - 1;
+
+            var myFac = '<option value = "pi">Select Factory</option>';
+
+            for (i=0; i<49; i++) {
+                if (document.getElementById((i+1) + "ot").innerHTML == whoseTurn) {
+                    var factNameBox = document.getElementById((i+1) + "tn").innerHTML;
+                    myFac = myFac + '<option value = ' + (i+1) + '>' + factNameBox + '</option>';
+                }
+            }
+
+            document.getElementById("commodi").innerHTML = myFac;
+
+            myFac = '<option value = "0">Residential housing bought from elsewhere</option><option value = "-1">Clothing bought from elsewhere</option><option value = "-2">Food bought from elsewhere</option><option value = "-3">Medicine  bought from elsewhere</option>';
+
+            for (i=0; i<49; i++) {
+                if (document.getElementById((i+1) + "ot").innerHTML == whoseTurn) {
+                    var consInd = 0;
+                    var productnm = randCate[i];
+                    var comList = ['metals', 'fossil', 'crops ', 'animal', 'forest', 'heavym', 'lightm', 'proces', 'refine', 'Residential Housing', 'commer', 'Clothing', 'Food Items', 'Medicine'];
+                    var product = comList[productnm - 2];
+                    var consList = ['Residential Housing', 'Clothing', 'Food Items', 'Medicine'];
+                    if (consList.includes(product)) {
+                        console.log("Entered successfully");
+                        var factNameBox = document.getElementById((i+1) + "tn").innerHTML;
+                        myFac = myFac + '<option value = ' + (i+1) + '>' + product + ' produced at ' + factNameBox + '</option>';
+                    }
+                }
+            }
+
+            document.getElementById("consumFactory").innerHTML = myFac;
+
+            document.getElementById("consumInputQn").max = 0;
+            document.getElementById("consumInputQn").value = 0;
+
+            rollDice();
+        }
+
+        function transact() {
+            var dcl = "Some error, cannot conduct transaction";
+            var buyer = whoseTurn;
+            var seller = document.getElementById(rawPosition + "ot").innerHTML;
+            var budget = document.getElementById(((17 * (buyer - 1)) + 16) + "ic").innerHTML;
+            var availabi = document.getElementById(rawPosition + "qb").innerHTML;
+            var ctb = document.getElementById("ctbo").value;
+            var csres = document.getElementById((((seller - 1) * 17) + parseInt(randCate[rawPosition - 1])) + "ic").innerHTML;
+
+            console.log('buyer: ' + buyer + ', seller: ' + seller + ', budget: ' + budget + ', avai: ' + availabi + ', ctbo: ' + ctb + ', botc: ' + document.getElementById("botc").value);
+
+            if (randCate[rawPosition - 1] != 1) {
+                console.log("SE");
+                document.getElementById(((17 * (seller - 1)) + 16) + "ic").innerHTML = parseInt(document.getElementById(((17 * (seller - 1)) + 16) + "ic").innerHTML) + parseInt(document.getElementById("ctbo").value);
+                document.getElementById(((17 * (buyer - 1)) + 16) + "ic").innerHTML = document.getElementById(((17 * (buyer - 1)) + 16) + "ic").innerHTML - document.getElementById("ctbo").value;
+                if (buyer != seller) {
+                    document.getElementById(rawPosition + "qb").innerHTML = document.getElementById(rawPosition + "qb").innerHTML - ((document.getElementById("botc").value));
+                }
+
+                //document.getElementById("transactionBanner").innerHTML = "Most recent transaction: Player " + seller + " sold " + document.getElementById("botc").value + " units of good " + randCate[rawPosition - 1] + " from factory " + rawPosition + " to player " + buyer + " for BNR " + document.getElementById("ctbo").value;
+                document.getElementById((((seller - 1) * 17) + parseInt(randCate[rawPosition - 1])) + "ic").innerHTML =  csres - document.getElementById("botc").value;
+                console.log('Seller box is ' + (((seller - 1) * 17) + parseInt(randCate[rawPosition - 1])) + "ic");
+                document.getElementById((((buyer - 1) * 17) + parseInt(randCate[rawPosition - 1])) + "ic").innerHTML =  parseInt(document.getElementById((((buyer - 1) * 17) + parseInt(randCate[rawPosition - 1])) + "ic").innerHTML) + parseInt(document.getElementById("botc").value);
+                console.log('Buyer box is ' + (((buyer - 1) * 17) + parseInt(randCate[rawPosition - 1])) + "ic");
+                var companyName = companiesCurrent[rawPosition - 1];
+                dcl = document.getElementById("botc").value + " units sold from " + companyName + " by " + playerNames[seller - 1] + " to " + playerNames[buyer - 1] + " for Rs. " + document.getElementById("ctbo").value; 
+                gameLog.push(dcl);
+                updateBoard1();
+            }
+
+            if (seller == "G") {
+                dcl = "Govt declines sale of output. " + playerNames[whoseTurn - 1] + "must buy the property for Rs. " + GovAssetPrice;
+                gameLog.push(dcl);
+                updateBoard1();
+            }
+
+            var commTransacted = randCate[rawPosition - 1];
+
+            if (commTransacted == 11) {
+                var placeInList = parseInt((whoseTurn - 1) * 4) + parseInt(0);
+                playerConsList[placeInList] = parseInt(playerConsList[placeInList]) + parseInt(document.getElementById("botc").value);
+            }
+
+            if (commTransacted == 13) {
+                var placeInList = parseInt((whoseTurn - 1) * 4) + parseInt(1);
+                playerConsList[placeInList] = parseInt(playerConsList[placeInList]) + parseInt(document.getElementById("botc").value);
+            }
+
+            if (commTransacted == 14) {
+                var placeInList = parseInt((whoseTurn - 1) * 4) + parseInt(2);
+                playerConsList[placeInList] = parseInt(playerConsList[placeInList]) + parseInt(document.getElementById("botc").value);
+            }
+
+            if (commTransacted == 15) {
+                var placeInList = parseInt((whoseTurn - 1) * 4) + parseInt(3);
+                playerConsList[placeInList] = parseInt(playerConsList[placeInList]) + parseInt(document.getElementById("botc").value);
+            }
+
+            //document.getElementById("transactionBanner").innerHTML = dcl;
+        }
+
+        function transactAsset() {
+            var dcl = "Cannot sell non-property"
+            var tq = document.getElementById(rawPosition + "qb").innerHTML;
+            var buyer = whoseTurn;
+            var buyerStock = document.getElementById((((buyer - 1) * 17) + randCate[rawPosition - 1]) + "ic").innerHTML;
+            var buyerMoney = document.getElementById(((17 * (buyer - 1)) + 16) + "ic").innerHTML;
+            var seller = document.getElementById(rawPosition + "ot").innerHTML;
+            console.log('buyer: ' + buyer + 'seller: ' + seller);
+            var companyName = companiesCurrent[rawPosition - 1];
+
+            if (randCate[rawPosition - 1] != 1) {
+                if ((seller == "G") & ((document.getElementById(((17 * (buyer - 1)) + 16) + "ic").innerHTML) >= GovAssetPrice)) {
+                    document.getElementById(((17 * (buyer - 1)) + 16) + "ic").innerHTML = buyerMoney - GovAssetPrice;
+                    document.getElementById(rawPosition + "ot").innerHTML = buyer;
+                    var newBuyerStock = parseInt(buyerStock) + parseInt(tq);
+                    console.log(newBuyerStock);
+                    document.getElementById((((buyer - 1) * 17) + randCate[rawPosition - 1]) + "ic").innerHTML = parseInt(buyerStock) + parseInt(tq);
+
+                    dcl = companyName + " sold by the govt to " + playerNames[whoseTurn - 1] + " for Rs. " + GovAssetPrice;
+                    gameLog.push(dcl);
+                    updateBoard1();
+                }
+                if ((seller != "G") & (parseInt((document.getElementById(((17 * (buyer - 1)) + 16) + "ic").innerHTML)) >= parseInt(document.getElementById("ctbo").value)) & (buyer != seller)) {
+                    console.log(seller);
+                    console.log(((17 * (seller - 1)) + 16) + "ic");
+                    var sellerMoney = document.getElementById(((17 * (seller - 1)) + 16) + "ic").innerHTML;
+                    document.getElementById(((17 * (buyer - 1)) + 16) + "ic").innerHTML = buyerMoney - document.getElementById("ctbo").value;
+                    var newx = parseInt(sellerMoney) + parseInt(document.getElementById("ctbo").value);
+                    document.getElementById(((17 * (seller - 1)) + 16) + "ic").innerHTML = newx;
+                    document.getElementById(rawPosition + "ot").innerHTML = buyer;
+                    document.getElementById((((seller - 1) * 17) + randCate[rawPosition - 1]) + "ic").innerHTML = document.getElementById((((seller - 1) * 17) + randCate[rawPosition - 1]) + "ic").innerHTML - tq;
+                    document.getElementById((((buyer - 1) * 17) + randCate[rawPosition - 1]) + "ic").innerHTML = parseInt(buyerStock) + parseInt(tq);
+                    dcl = companyName + " sold by " + playerNames[seller - 1] + " to " + playerNames[whoseTurn - 1] + " for Rs. " + document.getElementById("ctbo").value;
+                    gameLog.push(dcl);
+                    updateBoard1();
+                }
+            }
+        }
+
+        function outputDisplayFormula() {
+            var factory = document.getElementById("commodi").value;
+            var productnm = randCate[factory - 1];
+            var comList = ['metals', 'fossil', 'crops ', 'animal', 'forest', 'heavym', 'lightm', 'proces', 'refine', 'reside', 'commer', 'clothi', 'foodit', 'medici'];
+            var product = comList[productnm - 2];
+            var newOutput = 0;
+
+            var metalsq = parseInt(document.getElementById("metalsi").value);
+            var fossilq = parseInt(document.getElementById("fossili").value); 
+            var cropssq = parseInt(document.getElementById("crops i").value);
+            var animalq = parseInt(document.getElementById("animali").value); 
+            var forestq = parseInt(document.getElementById("foresti").value); 
+            var heavymq = parseInt(document.getElementById("heavymi").value);
+            var lightmq = parseInt(document.getElementById("lightmi").value);
+            var procesq = parseInt(document.getElementById("procesi").value); 
+            var refineq = parseInt(document.getElementById("refinei").value); 
+            var resideq = parseInt(document.getElementById("residei").value); 
+            var commerq = parseInt(document.getElementById("commeri").value); 
+            var clothiq = parseInt(document.getElementById("clothii").value);
+            var fooditq = parseInt(document.getElementById("fooditi").value);
+            var mediciq = parseInt(document.getElementById("medicii").value);
+
+            if (product == "metals") {
+                document.getElementById("outputDisplay").innerHTML = (parseInt(heavymq) + parseInt(lightmq)) * (parseInt(refineq) + parseInt(forestq));
+                document.getElementById("prodfor").innerHTML = "(Heavy machinery + Light machinery) * (Refined Products + Forest Products)";
+            }
+
+            if (product == "fossil") {
+                document.getElementById("outputDisplay").innerHTML = (parseInt(heavymq) + parseInt(lightmq)) * (parseInt(refineq) + parseInt(forestq));
+                document.getElementById("prodfor").innerHTML = "(Heavy machinery + Light machinery) * (Refined products + Forest Products)";
+            }
+
+            if (product == "crops ") {
+                document.getElementById("outputDisplay").innerHTML = parseInt(lightmq) * (parseInt(refineq) + parseInt(forestq));
+                document.getElementById("prodfor").innerHTML = "(Light machinery) * (Forest Products + Refined products)";
+            }
+
+            if (product == "animal") {
+                document.getElementById("outputDisplay").innerHTML = (parseInt(forestq) + parseInt(fooditq)) * parseInt(commerq) * parseInt(mediciq);
+                document.getElementById("prodfor").innerHTML = "(Forest products + foods crops) * (Commercial housing) * (Medicine)";
+            }
+
+            if (product == "forest") {
+                document.getElementById("outputDisplay").innerHTML = (lightmq) * (commerq);
+                document.getElementById("prodfor").innerHTML = "(Light machinery) * (Commercial housing)";
+            }
+
+            if (product == "heavym") {
+                document.getElementById("outputDisplay").innerHTML = parseInt(metalsq) * (parseInt(fossilq) + parseInt(refineq)) * parseInt(lightmq);
+                document.getElementById("prodfor").innerHTML = "(Metals) * (Fossils + Refined products) * (Light machinery)";
+            }
+
+            if (product == "lightm") {
+                document.getElementById("outputDisplay").innerHTML = parseInt(metalsq) * (parseInt(fossilq) + parseInt(refineq)) * parseInt(heavymq);
+                document.getElementById("prodfor").innerHTML = "(Metals) * (Fossils + Refined products) * (Heavy machinery)";
+            }
+
+            if (product == "proces") {
+                document.getElementById("outputDisplay").innerHTML = parseInt(lightmq) * (parseInt(cropssq) + parseInt(animalq)) * parseInt(commerq);
+                document.getElementById("prodfor").innerHTML = "(Light machinery) * (Crops + Animal products) * (Commercial housing)";
+            }
+
+            if (product == "refine") {
+                document.getElementById("outputDisplay").innerHTML = parseInt(lightmq) * (parseInt(fossilq) + parseInt(forestq) + parseInt(cropssq));
+                document.getElementById("prodfor").innerHTML = "(Light machinery) * (Fossils + Forest products + Crops)";
+            }
+
+            if (product == "reside") {
+                document.getElementById("outputDisplay").innerHTML = (parseInt(heavymq) + parseInt(lightmq)) * (parseInt(metalsq) + parseInt(fossilq));
+                document.getElementById("prodfor").innerHTML = "(Heavy machinery + Light machinery) * (Metals + Fossils)";
+            }
+
+            if (product == "commer") {
+                document.getElementById("outputDisplay").innerHTML = (parseInt(heavymq) + parseInt(lightmq)) * (parseInt(metalsq) + parseInt(fossilq));
+                document.getElementById("prodfor").innerHTML = "(Heavy machinery + Light machinery) * (Metals + Fossils)";
+            }
+
+            if (product == "clothi") {
+                document.getElementById("outputDisplay").innerHTML = (parseInt(heavymq) + parseInt(lightmq)) * (parseInt(cropssq) + parseInt(forestq) + parseInt(animalq));
+                document.getElementById("prodfor").innerHTML = "(Light machinery + Heavy Machinery) * (Crops + Forest Procude + Animal products)";
+            }
+
+            if (product == "foodit") {
+                document.getElementById("outputDisplay").innerHTML = (parseInt(forestq) + parseInt(animalq) + parseInt(fooditq)) * (parseInt(lightmq));
+                document.getElementById("prodfor").innerHTML = "(Forest produce + Animal products + food crops) * (Light machinery)";
+            }
+
+            if (product == "medici") {
+                document.getElementById("outputDisplay").innerHTML = (parseInt(forestq) + parseInt(animalq) + parseInt(cropssq) + parseInt(metalsq) + parseInt(fossilq)) * (parseInt(heavymq) + parseInt(lightmq));;
+                document.getElementById("prodfor").innerHTML = "(Forest products + Animal products + Crops + metals + fossils) * (Heavy machinery + Light machinery)";
+            }
+        }
+
+        function manualProd() {
+            var factory = document.getElementById("commodi").value;
+            var productnm = randCate[factory - 1];
+            var comList = ['metals', 'fossil', 'crops ', 'animal', 'forest', 'heavym', 'lightm', 'proces', 'refine', 'reside', 'commer', 'clothi', 'foodit', 'medici'];
+            var product = comList[productnm - 2];
+            var newOutput = 0;
+
+            console.log('factory nm: ' + factory + ', product nm: ' + productnm + ', product = ' + product);
+
+            var metalsqn = parseInt(document.getElementById("metalsi").value); console.log('metal ' + metalsqn);
+            var fossilqn = parseInt(document.getElementById("fossili").value); console.log('fossil ' + fossilqn);
+            var cropssqn = parseInt(document.getElementById("crops i").value); console.log('crops ' + cropssqn);
+            var animalqn = parseInt(document.getElementById("animali").value); console.log('animal ' + animalqn);
+            var forestqn = parseInt(document.getElementById("foresti").value); console.log('forest ' + forestqn);
+            var heavymqn = parseInt(document.getElementById("heavymi").value); console.log('heavy ' + heavymqn);
+            var lightmqn = parseInt(document.getElementById("lightmi").value); console.log('light ' + lightmqn);
+            var procesqn = parseInt(document.getElementById("procesi").value); console.log('proces ' + procesqn);
+            var refineqn = parseInt(document.getElementById("refinei").value); console.log('refine ' + refineqn);
+            var resideqn = parseInt(document.getElementById("residei").value); console.log('reside ' + resideqn);
+            var commerqn = parseInt(document.getElementById("commeri").value); console.log('commer ' + commerqn);
+            var clothiqn = parseInt(document.getElementById("clothii").value); console.log('cloth ' + clothiqn);
+            var fooditqn = parseInt(document.getElementById("fooditi").value); console.log('food ' + fooditqn);
+            var mediciqn = parseInt(document.getElementById("medicii").value); console.log('medicine ' + mediciqn);
+
+            var metalsav = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 2) + "ic").innerHTML);
+            var fossilav = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 3) + "ic").innerHTML);
+            var cropssav = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 4) + "ic").innerHTML);
+            var animalav = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 5) + "ic").innerHTML);
+            var forestav = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 6) + "ic").innerHTML);
+            var heavymav = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 7) + "ic").innerHTML);
+            var lightmav = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 8) + "ic").innerHTML);
+            var procesav = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 9) + "ic").innerHTML);
+            var refineav = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 10) + "ic").innerHTML);
+            var resideav = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 11) + "ic").innerHTML);
+            var commerav = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 12) + "ic").innerHTML);
+            var clothiav = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 13) + "ic").innerHTML);
+            var fooditav = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 14) + "ic").innerHTML);
+            var mediciav = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 15) + "ic").innerHTML);
+
+            var decl = "You have made some error, please try again";
+
+            if (product == "metals") {
+                console.log("first stage entered");
+                //if ((parseInt(heavymqn) <= parseInt(heavymav)) & (parseInt(lightmqn) <= parseInt(lightmav)) & (parseInt(refineqn) <= parseInt(refineav)) & (parseInt(forestqn) <= parseInt(forestav))) {
+                    console.log("second stage entered");
+                    newOutput = (parseInt(heavymqn) + parseInt(lightmqn)) * (parseInt(refineqn) + parseInt(forestqn));
+                    document.getElementById((parseInt(((whoseTurn - 1)*17)) + 2) + "ic").innerHTML = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 2) + "ic").innerHTML) + parseInt(newOutput);
+                    metalsav = parseInt(metalsav) + parseInt(newOutput);
+                    heavymav = heavymav - heavymqn;
+                    lightmav = lightmav - lightmqn;
+                    refineav = refineav - refineqn;
+                    forestav = forestav - forestqn;
+                    decl = newOutput + " units of " + product + " produced.";
+                //}
+            }
+            if (product == "fossil") {
+                console.log("first stage entered");
+                //if ((parseInt(heavymqn) <= parseInt(heavymav)) & (parseInt(lightmqn) <= parseInt(lightmav)) & (parseInt(refineqn) <= parseInt(refineav)) & (parseInt(forestqn) <= parseInt(forestav))) {
+                    console.log("second stage entered");
+                    newOutput = (parseInt(heavymqn) + parseInt(lightmqn)) * (parseInt(refineqn) + parseInt(forestqn));
+                    document.getElementById((parseInt(((whoseTurn - 1)*17)) + 3) + "ic").innerHTML = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 3) + "ic").innerHTML) + parseInt(newOutput);
+                    fossilav = parseInt(fossilav) + parseInt(newOutput);
+                    heavymav = heavymav - heavymqn;
+                    lightmav = lightmav - lightmqn;
+                    refineav = refineav - refineqn;
+                    forestav = forestav - forestqn;
+                    decl = newOutput + " units of " + product + " produced.";
+                //}
+            }
+            if (product == "crops ") {
+                console.log("first stage entered");
+                //if ((parseInt(lightmqn) <= parseInt(lightmav)) & (parseInt(refineqn) <= parseInt(refineav)) & (parseInt(forestqn) <= parseInt(forestav))) {
+                    console.log("second stage entered");
+                    newOutput = parseInt(lightmqn) * (parseInt(refineqn) + parseInt(forestqn));
+                    console.log('Add output to ic ' + (parseInt(((whoseTurn - 1)*17)) + 4) + "ic");
+                    console.log('Current inventory is ' + document.getElementById((parseInt(((whoseTurn - 1)*17)) + 4) + "ic")).innerHTML;
+                    console.log('New output is ' + newOutput);
+                    console.log('New total quantity is ' + (parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 4) + "ic").innerHTML) + parseInt(newOutput)));
+                    //document.getElementById((parseInt(((whoseTurn - 1)*17)) + 4) + "ic").innerHTML = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 4) + "ic").innerHTML) + parseInt(newOutput);
+                    
+                    var dabbaNumber = (parseInt(whoseTurn -1) * 17) + 4;
+                    console.log('dabba number is ' + dabbaNumber);
+                    var dabba = dabbaNumber + "ic";
+                    var dabbaQuantity = document.getElementById(dabba).innerHTML;
+                    var newDabbaQuantity = parseInt(dabbaQuantity) + parseInt(newOutput);
+                    cropssav = newDabbaQuantity;
+                    console.log('added ' + newOutput + ' to ' + dabba + ', where there was ' + dabbaQuantity + ', new total is ' + newDabbaQuantity);
+
+                    cropssav = parseInt(cropssav) + parseInt(newOutput);
+                    lightmav = lightmav - lightmqn;
+                    refineav = refineav - refineqn;
+                    forestav = forestav - forestqn;
+                    decl = newOutput + " units of " + product + " produced.";
+                //}
+            }
+            if (product == "animal") {
+                console.log("first stage entered");
+                //if ((parseInt(forestqn) <= parseInt(forestav)) & (parseInt(fooditqn) <= parseInt(fooditav)) & (parseInt(commerqn) <= parseInt(commerav)) & (parseInt(mediciqn) <= parseInt(mediciav))) {
+                    console.log("second stage entered");
+                    newOutput = (parseInt(forestqn) + parseInt(fooditqn)) * parseInt(commerqn) * parseInt(mediciqn);
+                    document.getElementById((parseInt(((whoseTurn - 1)*17)) + 5) + "ic").innerHTML = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 5) + "ic").innerHTML) + parseInt(newOutput);
+                    animalav = parseInt(animalav) + parseInt(newOutput);
+                    forestav = forestav - forestqn;
+                    fooditav = fooditav - fooditqn;
+                    commerav = commerav - commerqn;
+                    mediciav = mediciav - mediciqn;
+                    decl = newOutput + " units of " + product + " produced.";
+                //}
+            }
+            if (product == "forest") {
+                console.log("first stage entered");
+                //if ((parseInt(lightmqn) <= parseInt(lightmav)) & (parseInt(commerqn) <= parseInt(commerav))) {
+                    console.log("second stage entered");
+                    newOutput = (lightmqn) * (commerqn);
+                    document.getElementById((parseInt(((whoseTurn - 1)*17)) + 6) + "ic").innerHTML = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 6) + "ic").innerHTML) + parseInt(newOutput);
+                    forestav = parseInt(forestav) + parseInt(newOutput);
+                    lightmav = lightmav - lightmqn;
+                    commerav = commerav - commerqn;
+                    decl = newOutput + " units of " + product + " produced.";
+                //}
+            }
+            if (product == "heavym") {
+                console.log("first stage entered");
+                //if ((parseInt(metalsqn) <= parseInt(metalsav)) & (parseInt(fossilqn) <= parseInt(fossilav)) & (parseInt(refineqn) <= parseInt(refineav)) & (parseInt(lightmqn) <= parseInt(lightmav))) {
+                    console.log("second stage entered");
+                    newOutput = parseInt(metalsqn) * (parseInt(fossilqn) + parseInt(refineqn)) * parseInt(lightmqn);
+                    console.log(newOutput);
+                    document.getElementById((parseInt(((whoseTurn - 1)*17)) + 7) + "ic").innerHTML = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 7) + "ic").innerHTML) + parseInt(newOutput);
+                    heavymav = parseInt(heavymav) + parseInt(newOutput);
+                    metalsav = metalsav - metalsqn;
+                    fossilav = fossilav - fossilqn;
+                    refineav = refineav - refineqn;
+                    lightmav = lightmav - lightmqn;
+                    decl == newOutput + " units of " + product + " produced.";
+                //}
+            }
+            if (product == "lightm") {
+                console.log("first stage entered");
+                //if ((parseInt(metalsqn) <= parseInt(metalsav)) & (parseInt(fossilqn) <= parseInt(fossilav)) & (parseInt(refineqn) <= parseInt(refineav)) & (parseInt(heavymqn) <= parseInt(heavymav))) {
+                    console.log("second stage entered");
+                    newOutput = parseInt(metalsqn) * (parseInt(fossilqn) + parseInt(refineqn)) * parseInt(heavymqn);
+                    document.getElementById((parseInt(((whoseTurn - 1)*17)) + 8) + "ic").innerHTML = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 8) + "ic").innerHTML) + parseInt(newOutput);
+                    lightmav = parseInt(lightmav) + parseInt(newOutput);
+                    metalsav = metalsav - metalsqn;
+                    fossilav = fossilav - fossilqn;
+                    refineav = refineav - refineqn;
+                    heavymav = heavymav - lightmqn;
+                    decl = newOutput + " units of " + product + " produced.";
+                //}
+            }
+            if (product == "proces") {
+                console.log("first stage entered");
+                //if ((parseInt(lightmqn) <= parseInt(lightmav)) & (cropssqn <= cropssav) & (animalqn <= animalav) & (commerqn <= commerav)) {
+                    console.log("second stage entered");
+                    newOutput = parseInt(lightmqn) * (parseInt(cropssqn) + parseInt(animalqn)) * parseInt(commerqn);
+                    document.getElementById((((parseInt(whoseTurn) - 1)*17) + 9) + "ic").innerHTML = parseInt(document.getElementById((((parseInt(whoseTurn) - 1)*17) + 9) + "ic").innerHTML) + parseInt(newOutput);
+                    procesav = parseInt(procesav) + parseInt(newOutput);
+                    lightmav = lightmav - lightmqn;
+                    cropssav = cropssav - cropssqn;
+                    animalav = animalav - animalqn;
+                    commerav = commerav - commerqn;
+                    decl = newOutput + " units of " + product + " produced.";
+                //}
+            }
+            if (product == "refine") {
+                console.log("first stage entered");
+                //if ((parseInt(lightmqn) <= parseInt(lightmav)) & (parseInt(fossilqn) <= parseInt(fossilav)) & (parseInt(forestqn) <= parseInt(forestav)) & (parseInt(cropssqn) <= parseInt(cropssav))) {
+                    console.log("second stage entered");
+                    newOutput = parseInt(lightmqn) * (parseInt(fossilqn) + parseInt(forestqn) + parseInt(cropssqn));
+                    document.getElementById((((parseInt(whoseTurn) - 1)*17) + 10) + "ic").innerHTML = parseInt(document.getElementById((((parseInt(whoseTurn) - 1)*17) + 10) + "ic").innerHTML) + parseInt(newOutput);
+                    refineav = parseInt(refineav) + parseInt(newOutput);
+                    lightmav = lightmav - lightmqn;
+                    fossilav = fossilav - fossilqn;
+                    forestav = forestav - forestqn;
+                    cropssav = cropssav - cropssqn;
+                    decl = newOutput + " units of " + product + " produced.";
+                //}
+            }
+            if (product == "reside") {
+                console.log("first stage entered");
+                //if ((parseInt(heavymqn) <= parseInt(heavymav)) & (parseInt(lightmqn) <= parseInt(lightmav)) & (parseInt(metalsqn) <= parseInt(metalsav)) & (parseInt(fossilqn) <= parseInt(fossilav))) {
+                    console.log("second stage entered");
+                    newOutput = (parseInt(heavymqn) + parseInt(lightmqn)) * (parseInt(metalsqn) + parseInt(fossilqn));
+                    document.getElementById((((parseInt(whoseTurn) - 1)*17) + 11) + "ic").innerHTML = parseInt(document.getElementById((((parseInt(whoseTurn) - 1)*17) + 11) + "ic").innerHTML) + parseInt(newOutput);
+                    resideav = parseInt(resideav) + parseInt(newOutput);
+                    heavymav = heavymav - heavymqn;
+                    lightmav = lightmav - lightmqn;
+                    metalsav = metalsav - metalsqn;
+                    fossilav = fossilav - fossilqn;
+                    decl = newOutput + " units of " + product + " produced.";
+                //}
+            }
+            if (product == "commer") {
+                console.log("first stage entered");
+                //if ((parseInt(heavymqn) <= parseInt(heavymav)) & (parseInt(lightmqn) <= parseInt(lightmav)) & (parseInt(metalsqn) <= parseInt(metalsav)) & (parseInt(fossilqn) <= parseInt(fossilav))) {
+                    console.log("second stage entered");
+                    newOutput = (parseInt(heavymqn) + parseInt(lightmqn)) * (parseInt(metalsqn) + parseInt(fossilqn));
+                    document.getElementById((((parseInt(whoseTurn) - 1)*17) + 12) + "ic").innerHTML = parseInt(document.getElementById((((parseInt(whoseTurn) - 1)*17) + 12) + "ic").innerHTML) + parseInt(newOutput);
+                    commerav = parseInt(commerav) + parseInt(newOutput);
+                    heavymav = heavymav - heavymqn;
+                    lightmav = lightmav - lightmqn;
+                    metalsav = metalsav - metalsqn;
+                    fossilav = fossilav - fossilqn;
+                    decl = newOutput + " units of " + product + " produced.";
+                //}
+            }
+            if (product == "clothi") {
+                console.log("first stage entered");
+                //if ((parseInt(heavymqn) <= parseInt(heavymav)) & (parseInt(lightmqn) <= parseInt(lightmav)) & (parseInt(cropssqn) <= parseInt(cropssav)) & (parseInt(forestqn) <= parseInt(forestav)) & (parseInt(animalqn) <= parseInt(animalav))) {
+                    console.log("second stage entered");
+                    newOutput = (parseInt(heavymqn) + parseInt(lightmqn)) * (parseInt(cropssqn) + parseInt(forestqn) + parseInt(animalqn));
+                    document.getElementById((((parseInt(whoseTurn) - 1)*17) + 13) + "ic").innerHTML = parseInt(document.getElementById((((parseInt(whoseTurn) - 1)*17) + 13) + "ic").innerHTML) + parseInt(newOutput);
+                    clothiav = parseInt(clothiav) + parseInt(newOutput);
+                    heavymav = heavymav - heavymqn;
+                    lightmav = lightmav - lightmqn;
+                    cropssav = cropssav - cropssqn;
+                    forestav = forestav - forestqn;
+                    animalav = animalav - animalqn;
+                    decl = newOutput + " units of " + product + " produced.";
+                //}
+            }
+            if (product == "foodit") {
+                console.log("first stage entered");
+                //if ((parseInt(forestqn) <= parseInt(forestav)) & (parseInt(animalqn) <= parseInt(animalav)) & (parseInt(fooditqn) <= parseInt(fooditav)) & (parseInt(lightmqn) <= parseInt(lightmav))) {
+                    console.log("second stage entered");
+                    newOutput = (parseInt(forestqn) + parseInt(animalqn) + parseInt(fooditqn)) * (parseInt(lightmqn));
+                    document.getElementById((((parseInt(whoseTurn) - 1)*17) + 14) + "ic").innerHTML = parseInt(document.getElementById((((parseInt(whoseTurn) - 1)*17) + 14) + "ic").innerHTML) + parseInt(newOutput);
+                    fooditav = parseInt(fooditav) + parseInt(newOutput);
+                    forestav = forestav - forestqn;
+                    animalav = animalav - animalqn;
+                    fooditav = fooditav - fooditqn;
+                    lightmav = lightmav - lightmqn;
+                    decl = newOutput + " units of " + product + " produced.";
+                //}
+            }
+            if (product == "medici") {
+                console.log("first stage entered");
+                //if ((forestqn <= forestav) & (animalqn <= animalav) & (cropssqn <= cropssav) & (metalsqn <= metalsav) & (fossilqn <= fossilav) & (heavymqn <= heavymav) & (lightmqn <= lightmav)) {
+                    console.log("second stage entered");
+                    newOutput = (parseInt(forestqn) + parseInt(animalqn) + parseInt(cropssqn) + parseInt(metalsqn) + parseInt(fossilqn)) * (parseInt(heavymqn) + parseInt(lightmqn));
+                    document.getElementById((parseInt(((whoseTurn - 1)*17)) + 15) + "ic").innerHTML = parseInt(document.getElementById((parseInt(((whoseTurn - 1)*17)) + 15) + "ic").innerHTML) + parseInt(newOutput);
+                    mediciav = parseInt(mediciav) + parseInt(newOutput);
+                    forestav = forestav - forestqn;
+                    animalav = animalav - animalqn;
+                    metalsav = metalsav - metalsqn;
+                    fossilav = fossilav - fossilqn;
+                    cropssav = cropssav - cropssqn;
+                    heavymav = heavymav - heavymqn;
+                    lightmav = lightmav - lightmqn;
+                    decl = newOutput + " units of " + product + " produced.";
+                //}
+            }
+
+            console.log((parseInt(((whoseTurn - 1)*17)) + 2));
+
+            document.getElementById((parseInt(((whoseTurn - 1)*17)) + 2) + "ic").innerHTML = metalsav;
+            document.getElementById((parseInt(((whoseTurn - 1)*17)) + 3) + "ic").innerHTML = fossilav;
+            document.getElementById((parseInt(((whoseTurn - 1)*17)) + 4) + "ic").innerHTML = cropssav;
+            document.getElementById((parseInt(((whoseTurn - 1)*17)) + 5) + "ic").innerHTML = animalav;
+            document.getElementById((parseInt(((whoseTurn - 1)*17)) + 6) + "ic").innerHTML = forestav;
+            document.getElementById((parseInt(((whoseTurn - 1)*17)) + 7) + "ic").innerHTML = heavymav;
+            document.getElementById((parseInt(((whoseTurn - 1)*17)) + 8) + "ic").innerHTML = lightmav;
+            document.getElementById((parseInt(((whoseTurn - 1)*17)) + 9) + "ic").innerHTML = procesav;
+            document.getElementById((parseInt(((whoseTurn - 1)*17)) + 10) + "ic").innerHTML = refineav;
+            document.getElementById((parseInt(((whoseTurn - 1)*17)) + 11) + "ic").innerHTML = resideav;
+            document.getElementById((parseInt(((whoseTurn - 1)*17)) + 12) + "ic").innerHTML = commerav;
+            document.getElementById((parseInt(((whoseTurn - 1)*17)) + 13) + "ic").innerHTML = clothiav;
+            document.getElementById((parseInt(((whoseTurn - 1)*17)) + 14) + "ic").innerHTML = fooditav;
+            document.getElementById((parseInt(((whoseTurn - 1)*17)) + 15) + "ic").innerHTML = metalsav;
+
+            document.getElementById(factory + "qb").innerHTML = parseInt(document.getElementById(factory + "qb").innerHTML) + parseInt(newOutput);
+
+            document.getElementById("metalsi").max = document.getElementById(((17 * (whoseTurn - 1)) + 2) + "ic").innerHTML;
+            document.getElementById("fossili").max = document.getElementById(((17 * (whoseTurn - 1)) + 3) + "ic").innerHTML;
+            document.getElementById("crops i").max = document.getElementById(((17 * (whoseTurn - 1)) + 4) + "ic").innerHTML;
+            document.getElementById("animali").max = document.getElementById(((17 * (whoseTurn - 1)) + 5) + "ic").innerHTML;
+            document.getElementById("foresti").max = document.getElementById(((17 * (whoseTurn - 1)) + 6) + "ic").innerHTML;
+            document.getElementById("heavymi").max = document.getElementById(((17 * (whoseTurn - 1)) + 7) + "ic").innerHTML;
+            document.getElementById("lightmi").max = document.getElementById(((17 * (whoseTurn - 1)) + 8) + "ic").innerHTML;
+            document.getElementById("procesi").max = document.getElementById(((17 * (whoseTurn - 1)) + 9) + "ic").innerHTML;
+            document.getElementById("refinei").max = document.getElementById(((17 * (whoseTurn - 1)) + 10) + "ic").innerHTML;
+            document.getElementById("residei").max = document.getElementById(((17 * (whoseTurn - 1)) + 11) + "ic").innerHTML;
+            document.getElementById("commeri").max = document.getElementById(((17 * (whoseTurn - 1)) + 12) + "ic").innerHTML;
+            document.getElementById("clothii").max = document.getElementById(((17 * (whoseTurn - 1)) + 13) + "ic").innerHTML;
+            document.getElementById("fooditi").max = document.getElementById(((17 * (whoseTurn - 1)) + 14) + "ic").innerHTML;
+            document.getElementById("medicii").max = document.getElementById(((17 * (whoseTurn - 1)) + 15) + "ic").innerHTML;
+
+            document.getElementById("metalsi").value = 0;
+            document.getElementById("fossili").value = 0;
+            document.getElementById("crops i").value = 0;
+            document.getElementById("animali").value = 0;
+            document.getElementById("foresti").value = 0;
+            document.getElementById("heavymi").value = 0;
+            document.getElementById("lightmi").value = 0;
+            document.getElementById("procesi").value = 0;
+            document.getElementById("refinei").value = 0;
+            document.getElementById("residei").value = 0;
+            document.getElementById("commeri").value = 0;
+            document.getElementById("clothii").value = 0;
+            document.getElementById("fooditi").value = 0;
+            document.getElementById("medicii").value = 0;
+
+            var result = playerNames[whoseTurn - 1] + ' produced ' + newOutput + ' units of ' + product
+            gameLog.push(result);
+            updateBoard1();
+        }
+
+        /* function manualProd() {
+            var factory = document.getElementById("commodi").value;
+            var productnm = randCate[factory - 1];
+            var comList = ['metals', 'fossil', 'crops ', 'animal', 'forest', 'heavym', 'lightm', 'proces', 'refine', 'reside', 'commer', 'clothi', 'foodit', 'medici'];
+            var product = comList[productnm - 2];
+            var newOutput = 0;
+
+            console.log("factory is " + factory + ", product num is " + productnm + ", product is " + product)
+
+            if (product = "metals") {
+                newOutput = document.getElementById("metalsi").value
+                document.getElementById((parseInt(((whoseTurn - 1)*14)) + 2) + "ic").innerHTML = parseInt(document.getElementById("metalsi").value) + parseInt(newOutput);
+                console.log(newOutput + " units of " + product + " produced");
+                document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML = document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML - parseInt(document.getElementById("metalsi").value);
+            }
+
+            if (product = "metals") {
+                newOutput = document.getElementById("metalsi").value
+                document.getElementById((parseInt(((whoseTurn - 1)*14)) + 2) + "ic").innerHTML = parseInt(document.getElementById("metalsi").value) + parseInt(newOutput);
+                console.log(newOutput + " units of " + product + " produced");
+                document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML = document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML - parseInt(document.getElementById("metalsi").value);
+            }
+
+            if (product = "metals") {
+                newOutput = document.getElementById("metalsi").value
+                document.getElementById((parseInt(((whoseTurn - 1)*14)) + 2) + "ic").innerHTML = parseInt(document.getElementById("metalsi").value) + parseInt(newOutput);
+                console.log(newOutput + " units of " + product + " produced");
+                document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML = document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML - parseInt(document.getElementById("metalsi").value);
+            }
+
+            if (product = "metals") {
+                newOutput = document.getElementById("metalsi").value
+                document.getElementById((parseInt(((whoseTurn - 1)*14)) + 2) + "ic").innerHTML = parseInt(document.getElementById("metalsi").value) + parseInt(newOutput);
+                console.log(newOutput + " units of " + product + " produced");
+                document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML = document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML - parseInt(document.getElementById("metalsi").value);
+            }
+
+            if (product = "metals") {
+                newOutput = document.getElementById("metalsi").value
+                document.getElementById((parseInt(((whoseTurn - 1)*14)) + 2) + "ic").innerHTML = parseInt(document.getElementById("metalsi").value) + parseInt(newOutput);
+                console.log(newOutput + " units of " + product + " produced");
+                document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML = document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML - parseInt(document.getElementById("metalsi").value);
+            }
+
+            if (product = "metals") {
+                newOutput = document.getElementById("metalsi").value
+                document.getElementById((parseInt(((whoseTurn - 1)*14)) + 2) + "ic").innerHTML = parseInt(document.getElementById("metalsi").value) + parseInt(newOutput);
+                console.log(newOutput + " units of " + product + " produced");
+                document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML = document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML - parseInt(document.getElementById("metalsi").value);
+            }
+
+            if (product = "metals") {
+                newOutput = document.getElementById("metalsi").value
+                document.getElementById((parseInt(((whoseTurn - 1)*14)) + 2) + "ic").innerHTML = parseInt(document.getElementById("metalsi").value) + parseInt(newOutput);
+                console.log(newOutput + " units of " + product + " produced");
+                document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML = document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML - parseInt(document.getElementById("metalsi").value);
+            }
+
+            if (product = "metals") {
+                newOutput = document.getElementById("metalsi").value
+                document.getElementById((parseInt(((whoseTurn - 1)*14)) + 2) + "ic").innerHTML = parseInt(document.getElementById("metalsi").value) + parseInt(newOutput);
+                console.log(newOutput + " units of " + product + " produced");
+                document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML = document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML - parseInt(document.getElementById("metalsi").value);
+            }
+
+            if (product = "metals") {
+                newOutput = document.getElementById("metalsi").value
+                document.getElementById((parseInt(((whoseTurn - 1)*14)) + 2) + "ic").innerHTML = parseInt(document.getElementById("metalsi").value) + parseInt(newOutput);
+                console.log(newOutput + " units of " + product + " produced");
+                document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML = document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML - parseInt(document.getElementById("metalsi").value);
+            }
+
+            if (product = "metals") {
+                newOutput = document.getElementById("metalsi").value
+                document.getElementById((parseInt(((whoseTurn - 1)*14)) + 2) + "ic").innerHTML = parseInt(document.getElementById("metalsi").value) + parseInt(newOutput);
+                console.log(newOutput + " units of " + product + " produced");
+                document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML = document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML - parseInt(document.getElementById("metalsi").value);
+            }
+
+            if (product = "metals") {
+                newOutput = document.getElementById("metalsi").value
+                document.getElementById((parseInt(((whoseTurn - 1)*14)) + 2) + "ic").innerHTML = parseInt(document.getElementById("metalsi").value) + parseInt(newOutput);
+                console.log(newOutput + " units of " + product + " produced");
+                document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML = document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML - parseInt(document.getElementById("metalsi").value);
+            }
+
+            if (product = "metals") {
+                newOutput = document.getElementById("metalsi").value
+                document.getElementById((parseInt(((whoseTurn - 1)*14)) + 2) + "ic").innerHTML = parseInt(document.getElementById("metalsi").value) + parseInt(newOutput);
+                console.log(newOutput + " units of " + product + " produced");
+                document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML = document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML - parseInt(document.getElementById("metalsi").value);
+            }
+
+            if (product = "metals") {
+                newOutput = document.getElementById("metalsi").value
+                document.getElementById((parseInt(((whoseTurn - 1)*14)) + 2) + "ic").innerHTML = parseInt(document.getElementById("metalsi").value) + parseInt(newOutput);
+                console.log(newOutput + " units of " + product + " produced");
+                document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML = document.getElementById((parseInt(((whoseTurn - 1) * 14)) + parseInt(placeInTable)) + "ic").innerHTML - parseInt(document.getElementById("metalsi").value);
+            }
+        } */
+
+        /* function manualProd() {
+            var factSelected = document.getElementById("commodi").value;
+            console.log(factSelected);
+
+            var metalsUsed = document.getElementById("metalsi").value;
+            var fossilsUsed = document.getElementById("fossilsi").value;
+            var cropsUsed = document.getElementById("crops i").value;
+            var animalsUsed = document.getElementById("animali").value;
+            var forestsUsed = document.getElementById("foresti").value;
+            var heavymUsed = document.getElementById("heavymi").value;
+            var lightmUsed = document.getElementById("lightmi").value;
+            var processedUsed = document.getElementById("procesi").value;
+            var refinedUsed = document.getElementById("refinei").value;
+            var residentialUsed = document.getElementById("residei").value;
+            var commercialUsed = document.getElementById("commeri").value;
+            var clothesUsed = document.getElementById("clothii").value;
+            var foodsUsed = document.getElementById("fooditi").value;
+            var medicinesUsed = document.getElementById("medicii").value;
+
+            var metalsAv = metalsdocument.getElementById((parseInt(((whoseTurn - 1)*14)) + 2) + "ic").innerHTML;
+            var fossilsAv = metalsdocument.getElementById((parseInt(((whoseTurn - 1)*14)) + 3) + "ic").innerHTML;
+            var cropsAv = metalsdocument.getElementById((parseInt(((whoseTurn - 1)*14)) + 4) + "ic").innerHTML;
+            var animalsAv = metalsdocument.getElementById((parseInt(((whoseTurn - 1)*14)) + 5) + "ic").innerHTML;
+            var forestsAv = metalsdocument.getElementById((parseInt(((whoseTurn - 1)*14)) + 6) + "ic").innerHTML;
+            var heavymAv = metalsdocument.getElementById((parseInt(((whoseTurn - 1)*14)) + 7) + "ic").innerHTML;
+            var lightmAv = metalsdocument.getElementById((parseInt(((whoseTurn - 1)*14)) + 8) + "ic").innerHTML;
+            var processedAv = metalsdocument.getElementById((parseInt(((whoseTurn - 1)*14)) + 9) + "ic").innerHTML;
+            var refinedAv = metalsdocument.getElementById((parseInt(((whoseTurn - 1)*14)) + 10) + "ic").innerHTML;
+            var residentialAv = metalsdocument.getElementById((parseInt(((whoseTurn - 1)*14)) + 11) + "ic").innerHTML;
+            var commercialAv = metalsdocument.getElementById((parseInt(((whoseTurn - 1)*14)) + 12) + "ic").innerHTML;
+            var clothesAv = metalsdocument.getElementById((parseInt(((whoseTurn - 1)*14)) + 13) + "ic").innerHTML;
+            var foodsAv = metalsdocument.getElementById((parseInt(((whoseTurn - 1)*14)) + 14) + "ic").innerHTML;
+            var medicinesAv = metalsdocument.getElementById((parseInt(((whoseTurn - 1)*15)) + 2) + "ic").innerHTML;
+        } */
+
+        function Consume() {
+            var facOfChoice = document.getElementById("consumFactory").value;
+            var inpq = document.getElementById("consumInputQn").value;
+            var inp = randCate[facOfChoice - 1]
+            console.log((((parseInt(whoseTurn) - 1) * 17) + parseInt(inp)) + "ic");
+
+            if (document.getElementById("consumFactory").value == 0) {
+                inp = 11;
+            }
+            if (document.getElementById("consumFactory").value == -1) {
+                inp = 13;
+            }
+            if (document.getElementById("consumFactory").value == -2) {
+                inp = 14;
+            }
+            if (document.getElementById("consumFactory").value == -3) {
+                inp = 15;
+            }
+
+            document.getElementById((((parseInt(whoseTurn) - 1) * 17) + parseInt(inp)) + "ic").innerHTML = parseInt(document.getElementById((((parseInt(whoseTurn) - 1) * 17) + parseInt(inp)) + "ic").innerHTML) - parseInt(inpq);
+            document.getElementById((((whoseTurn - 1) * 17) + 17) + "ic").innerHTML = parseInt(document.getElementById((((whoseTurn - 1) * 17) + 17) + "ic").innerHTML) + parseInt(inpq);
+            
+            if (document.getElementById("consumFactory").value > 0) {
+                console.log("entered successfully");
+                document.getElementById(facOfChoice + "qb").innerHTML = document.getElementById(facOfChoice + "qb").innerHTML - inpq;
+            }
+            if (document.getElementById("consumFactory").value == 0) {
+                console.log("entered successfully");
+                var placeInList = parseInt((whoseTurn - 1) * 4) + parseInt(0);
+                playerConsList[placeInList] = playerConsList[placeInList] - inpq;
+            }
+            if (document.getElementById("consumFactory").value == -1) {
+                console.log("entered successfully");
+                var placeInList = parseInt((whoseTurn - 1) * 4) + parseInt(1);
+                playerConsList[placeInList] = playerConsList[placeInList] - inpq;
+            }
+            if (document.getElementById("consumFactory").value == -2) {
+                console.log("entered successfully");
+                var placeInList = parseInt((whoseTurn - 1) * 4) + parseInt(2);
+                playerConsList[placeInList] = playerConsList[placeInList] - inpq;
+            }
+            if (document.getElementById("consumFactory").value == -3) {
+                console.log("entered successfully");
+                var placeInList = parseInt((whoseTurn - 1) * 4) + parseInt(3);
+                playerConsList[placeInList] = playerConsList[placeInList] - inpq;
+            }
+
+            var result = playerNames[whoseTurn - 1] + ' consumed ' + inpq + ' units of ' + document.getElementById(parseInt(inp) + "ic").innerHTML + ' to gain ' + inpq + ' lives';
+            gameLog.push(result);
+            updateBoard1();
+
+            document.getElementById("consumInputQn").value = 0;
+            document.getElementById("consumInputQn").max = 0;
+        }
+
+         function displayFormula() {
+            var reso = document.getElementById("formulaInput").value;
+            if (reso == 1) {
+                document.getElementById("prodfor").innerHTML = "(Heavy machinery + Light machinery) * (Refined Products + Forest Products)";
+            }
+            if (reso == 2) {
+                document.getElementById("prodfor").innerHTML = "(Heavy machinery + Light machinery) * (Refined products + Forest Products)";
+            }
+            if (reso == 3) {
+                document.getElementById("prodfor").innerHTML = "(Light machinery) * (Forest Products + Refined products)";
+            }
+            if (reso == 4) {
+                document.getElementById("prodfor").innerHTML = "(Forest products + foods crops) * (Commercial housing) * (Medicine)";
+            }
+            if (reso == 5) {
+                document.getElementById("prodfor").innerHTML = "(Light machinery) * (Commercial housing)";
+            }
+            if (reso == 6) {
+                document.getElementById("prodfor").innerHTML = "(Metals) * (Fossils + Refined products) * (Light machinery)";
+            }
+            if (reso == 7) {
+                document.getElementById("prodfor").innerHTML = "(Metals) * (Fossils + Refined products) * (Heavy machinery)";
+            }
+            if (reso == 8) {
+                document.getElementById("prodfor").innerHTML = "(Light machinery) * (Crops + Animal products) * (Commercial housing)";
+            }
+            if (reso == 9) {
+                document.getElementById("prodfor").innerHTML = "(Light machinery) * (Fossils + Forest products + Crops)";
+            }
+            if (reso == 10) {
+                document.getElementById("prodfor").innerHTML = "(Heavy machinery + Light machinery) * (Metals + Fossils)";
+            }
+            if (reso == 11) {
+                document.getElementById("prodfor").innerHTML = "(Heavy machinery + Light machinery) * (Metals + Fossils)";
+            }
+            if (reso == 12) {
+                document.getElementById("prodfor").innerHTML = "(Light machinery + Heavy Machinery) * (Crops + Forest Procude + Animal products)";
+            }
+            if (reso == 13) {
+                document.getElementById("prodfor").innerHTML = "(Forest produce + Animal products + foor crops) * (Light machinery)";
+            }
+            if (reso == 14) {
+                document.getElementById("prodfor").innerHTML = "(Forest products + Animal products + Crops + metals + fossils) * (Heavy machinery + Light machinery)";
+            }
+        }
+
+        function openProd() {
+            document.getElementById("playerControl").style.display = "";
+            document.getElementById("consManager").style.display = "none";
+            document.getElementById("tradeManager").style.display = "none";
+            document.getElementById("logContainer").style.display = "none";
+            console.log("Done");
+            perStart = 1;
+            conStart = 0;
+        }
+
+        function openCons() {
+            document.getElementById("playerControl").style.display = "none";
+            document.getElementById("consManager").style.display = "";
+            document.getElementById("tradeManager").style.display = "none";
+            document.getElementById("logContainer").style.display = "none";
+            console.log("Done done");
+            perStart = 0;
+            conStart = 1;
+        }
+
+        function openTrad() {
+            document.getElementById("playerControl").style.display = "none";
+            document.getElementById("consManager").style.display = "none";
+            document.getElementById("tradeManager").style.display = "";
+            document.getElementById("logContainer").style.display = "none";
+            console.log("Done");
+            perStart = 0;
+            conStart = 0;
+        }
+
+        function openLog() {
+            document.getElementById("playerControl").style.display = "none";
+            document.getElementById("consManager").style.display = "none";
+            document.getElementById("tradeManager").style.display = "none";
+            document.getElementById("logContainer").style.display = "block";
+
+            var fullLog = "0. Game started";
+
+            for (i=4; i < gameLog.length; i++) {
+                fullLog = fullLog + "<br>" + (i - 3) + ". " + gameLog[i];
+            }
+
+            document.getElementById("logBox").innerHTML = fullLog;
+            console.log("Done");
+            perStart = 0;
+            conStart = 1;
+        }
+
+        var indi2 = 0;
+        var arrowIndi = 0;
+
+        document.addEventListener('keydown', function(event) {
+            if (event.keyCode == 39) {
+                if (indi2 == 1) {
+                    nextPlayer();
+                }
+                if (indi2 == 0) {
+                    rollDice();
+                    indi2 = 1;
+                }
+            }
+
+            if (event.keyCode == 38) {
+                transactAsset();
+            }
+
+            if (event.keyCode == 188) {
+                if (arrowIndi == 0) {
+                    for (i = 0; i < numPlayers; i++) {
+                        console.log("entered successfully");
+                        document.getElementById("leftArrow" + (i+1)).style.display = "block";
+                        document.getElementById("leftArrow" + (i+1)).style.top = (parseInt(document.getElementById(i+1).style.top) - 42) + "px";
+                        document.getElementById("leftArrow" + (i+1)).style.left = (parseInt(document.getElementById(i+1).style.left) + 40) + "px";
+                    }
+                }
+
+                if (arrowIndi == 1) {
+                    for (i = 0; i < numPlayers; i++) {
+                        document.getElementById("leftArrow" + (i+1)).style.display = "none";
+                    }
+                }
+
+                arrowIndi = 1 - arrowIndi;
+            }
+        }, true);
+
+        var tmpvar = setInterval(outputDisplayFormula, 10);
+
+        function setLimCons() {
+            var factoryOfChoice = document.getElementById("consumFactory").value;
+            console.log(factoryOfChoice);
+            console.log(playerConsList);
+            console.log("whoseTurn is " + whoseTurn);
+            if (factoryOfChoice > 0) {
+                var totalAvailable = document.getElementById(factoryOfChoice + "qb").innerHTML;
+            }
+            if (factoryOfChoice == 0) {
+                var placeInList = parseInt((whoseTurn - 1) * 4) + parseInt(0);
+                var totalAvailable = playerConsList[placeInList];
+                console.log(playerConsList[placeInList]);
+            }
+            if (factoryOfChoice == -1) {
+                var placeInList = parseInt((whoseTurn - 1) * 4) + parseInt(1);
+                var totalAvailable = playerConsList[placeInList];
+                console.log(playerConsList[placeInList]);
+            }
+            if (factoryOfChoice == -2) {
+                var placeInList = parseInt((whoseTurn - 1) * 4) + parseInt(2);
+                var totalAvailable = playerConsList[placeInList];
+                console.log(playerConsList[placeInList]);
+            }
+            if (factoryOfChoice == -3) {
+                var placeInList = parseInt((whoseTurn - 1) * 4) + parseInt(3);
+                var totalAvailable = playerConsList[placeInList];
+                console.log(playerConsList[placeInList]);
+            }
+
+            document.getElementById("consumInputQn").max = totalAvailable;
+            document.getElementById("consumInputQn").value = 0;
+        }
+
+    </script>
+
+    <div id = "num_players" style = "display: none;">
+        <p id = "enterPlayer">Enter the number of players</p>
+        <button class = "btn" onclick="setNumPlayers()">Start!</button>
+        <button class = "btn" onclick="rollDice()">Roll Die</button>
+        <button class = "btn" onClick="displayHelp()">Help</button>
+        <p id = "textwala">So, how many will play today?</p>
+        <p id = "diceface">Roll the die after starting the game.</p>
+    </div>
+
+    <div id = 'displayBoard1' style = "position: absolute; top: 0px; left: 638px; width: 448px; height: 150px; border: 2px solid #969696; background-color: black;">
+        <div style = "color: white; font-weight: 700; text-align: center; vertical-align: middle; font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: 30px;"">Display Board</br></div>
+        <div id = "lcb" style="text-align: center; color: white; font-family: 'Times New Roman', Times, serif; font-weight: 1px; font-size: 15px;">Press Right Arrow to roll die</br>Press Up Arrow to transact asset</br>Press ` for help</br>You will see the latest updates here</div>
+    </div>
+
+    <div id = "startPopUp" style = "position: absolute; z-index: 1; top: 30px; left: 30px; height: 670px; width: 1470px; background: rgba(0, 0, 0, 0.90); border: 4px solid wheat; border-radius: 80px;">
+        <div id = "welcomeToTheGame" style = "position: absolute; top: 100px; left: 370px; color: wheat; font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: 90px;">Welcome to Bazaar!</div>
+        <div id = "popUpStatement" style = "position: absolute; top: 240px; left: 365px; font-style: italic; color: white; font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: 30px;">So, how many people have decided to engage in this business of life?</div>
+        <div id = "textBoxContainer" style="position: absolute; top: 300px; left: 0px;">
+            <input id = "textBox1" type="text" id="numplayers" style = "position: absolute; top: 0px; left: 710px; height: 50px; width: 80px; background-color: wheat; border: 2px solid black; text-align: center; font-size:x-large; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; border-radius: 40px;"></input>
+        </div>
+        <button id = "setPlayers" onclick = "askNames()" style = "position: absolute; left: 679px; top: 380px; color: white; height: 35px; width: 150px; background: rgba(0, 0, 0, 0.10); border: 2px solid whitesmoke; text-align: center; font-size: x-large; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; border-radius: 40px;">Enter</button>
+    </div>
+
+    <div id = "logo">
+        <img src = "https://static.wixstatic.com/media/5f2284_74344e010daf450ca61c953be7ec7618~mv2.png">
+    </div>
+
+    <div id = "playerBox" style="font-size: 15px; text-align:center">
+        <div style = "font-weight: 700; background-color: black; color: white; font-size: large; height: 23px;">Inventory</div>
+        <table id = "inventory" style = "font-size: 15px;">
+            <tr>
+                <td id = "player" style = "width:50px; background-color: black; color: white;">Player</td>
+                <td id = "metals" style = "width:50px; background-color: black; color: white;">Metals</td>
+                <td id = "fossil" style = "width:50px; background-color: black; color: white;">Fossil</td>
+                <td id = "crops " style = "width:50px; background-color: black; color: white;">Crops </td>
+                <td id = "animal" style = "width:50px; background-color: black; color: white;">Animal</td>
+                <td id = "forest" style = "width:50px; background-color: black; color: white;">Forest</td>
+                <td id = "heavym" style = "width:50px; background-color: black; color: white;">HeavyM</td>
+                <td id = "lightm" style = "width:50px; background-color: black; color: white;">LightM</td>
+                <td id = "proces" style = "width:50px; background-color: black; color: white;">Proces</td>
+                <td id = "refine" style = "width:50px; background-color: black; color: white;">Refine</td>
+                <td id = "reside" style = "width:50px; background-color: black; color: white;">Reside</td>
+                <td id = "commer" style = "width:50px; background-color: black; color: white;">Commer</td>
+                <td id = "clothi" style = "width:50px; background-color: black; color: white;">Clothi</td>
+                <td id = "foodit" style = "width:50px; background-color: black; color: white;">FoodIt</td>
+                <td id = "medici" style = "width:50px; background-color: black; color: white;">Medici</td>
+                <td id = "money" style = "width:50px; background-color: black; color: white;">Money</td>
+                <td id = "life" style = "width:50px; background-color: black; color: white;">Life</td>
+            </tr>
+        </table>
+    </div>
+
+    <div id = "menu" style="position: absolute; top: 360px; left: 640px; text-align: center;">
+        Menu: 
+        <button id = "prodManagerTrigger" class="btn" onclick="openProd()">Production Manager</button>
+        <button id = "tradManagerTrigger" class="btn" onclick="openTrad()">Trade Manager</button>
+        <button id = "consManagerTrigger" class="btn" onclick="openCons()">Consumption Manager</button>
+        <button id = "logTrigger" class="btn" onclick="openLog()">Game Log</button>
+        <button id = "helpTrigger" class="btn" onclick="openHelp()">Help</button>
+    </div>
+
+    <div id = "playerControl" style = "display: none; width: 890px; position:absolute; top:380px; left:640px; text-align: center; border: solid 2px black;">
+        <div id = "prodHeading" style = "background-color: black; color: white; font-family: 'Times New Roman', Times, serif; font-size: large; font-weight: 700;">Production Manager</div>
+
+        <div id = "selectFactoryContainer" style=" position:absolute; top: 30px; left: 260px; center;">
+            Select the factory where production is to be done: 
+            <select id = "commodi" style= "width:40px"><option value = "pi">Select Factory</option></select>
+        </div>
+
+        <table id = "sliderContainer" style="font-size: 15px; position: absolute; top: 60px;">
+            <tr>
+                <td>Metals</td>
+                <td><input type="range" min="0" max="0" value="0" id = "metalsi" style="width: 200px;"></td>
+                <td>Fossils</td>
+                <td><input type="range" min="0" max="0" value="0" id = "fossili" style="width: 200px;"></td>
+            </tr>
+            <tr>
+                <td>Crops</td>
+                <td><input type="range" min="0" max="0" value="0" id = "crops i" style="width: 200px;"></td>
+                <td>Animal Products</td>
+                <td><input type="range" min="0" max="0" value="0" id = "animali" style="width: 200px;"></td>
+            </tr>
+            <tr>
+                <td>Forest Products</td>
+                <td><input type="range" min="0" max="0" value="0" id = "foresti" style="width: 200px;"></td>
+                <td>Heavy Machinery</td>
+                <td><input type="range" min="0" max="0" value="0" id = "heavymi" style="width: 200px;"></td>
+            </tr>
+            <tr>
+                <td>Light Machinery</td>
+                <td><input type="range" min="0" max="0" value="0" id = "lightmi" style="width: 200px;"></td>
+                <td>Processed Products</td>
+                <td><input type="range" min="0" max="0" value="0" id = "procesi" style="width: 200px;"></td>
+            </tr>
+            <tr>
+                <td>Refined Products</td>
+                <td><input type="range" min="0" max="0" value="0" id = "refinei" style="width: 200px;"></td>
+                <td>Residential Housing</td>
+                <td><input type="range" min="0" max="0" value="0" id = "residei" style="width: 200px;"></td>
+            </tr>
+            <tr>
+                <td>Commercial Housing</td>
+                <td><input type="range" min="0" max="0" value="0" id = "commeri" style="width: 200px;"></td>
+                <td>Clothing</td>
+                <td><input type="range" min="0" max="0" value="0" id = "clothii" style="width: 200px;"></td>
+            </tr>
+            <tr>
+                <td>Food Items</td>
+                <td><input type="range" min="0" max="0" value="0" id = "fooditi" style="width: 200px;"></td>
+                <td>Medicine</td>
+                <td><input type="range" min="0" max="0" value="0" id = "medicii" style="width: 200px;"></td>
+            </tr>
+        </table>
+
+        <div id = "outputDisplayBox" style="position: absolute; top: 60px; left: 690px; border: solid 2px black; width: 195px;">Quantity <br><br>
+            <div id = "outputDisplay" style="font-size: 100px; height: 155px;">0</div>
+        </div>
+
+        <div id = "prodforContainer" style = "position: absolute; top: 280px; left: 0px; text-align: center; width: 885px;">
+            <p id = "prodfor">Select factory to see production formula <br><br></p>
+            <button id = "productionButton" class= "btn" onclick= "manualProd()" style= "width: 80px; height: 40px; font-weight: 700;">Produce</button>
+        </div>
+
+        </div>
+    </div>
+
+    <div id = "tradeManager" style = "text-align: center; display: block; position: absolute; left: 640px; top: 460px; border: 1px solid black; width: 890px;">
+        <div style = "background-color: black; color: white; font-size: large; font-family: 'Times New Roman', Times, serif;font-weight: 600;">Trade Manager</div>
+        Money Payment</br>
+        <input type = "text" id = "ctbo"></input></br>
+        Quantity of good</br>
+        <input type = "text" id = "botc"></input> </br></br>
+        <button id = "trone" class = "btn" onclick="transact()">Transact Output</button>
+        <button id = "trtwo" class = "btn" onclick="transactAsset()">Transact Asset</button> </br>
+    </div>
+
+    <div id = "logContainer" style = "text-align: justify; display: none; position: absolute; left: 640px; top: 460px; border: 1px solid black; width: 890px;">
+        <div style = "background-color: black; color: white; font-size: large; font-family: 'Times New Roman', Times, serif;font-weight: 600;">Game Log</div>
+        <div id = "logBox" style = "color: black; text-align: justify; position: absolute; left: 0px; top: 30px; border: 1px solid black; width: 889px;"></div>
+    </div>
+
+    <button id = "notr" class = "btn" onclick="nextPlayer()" style="position: absolute; top: 650px; left: 920px; color: white; border: none; display: none;">Next Roll</button>
+
+    <div id = "consManager" style = "text-align: center; width: 890px; display: none; position: absolute; left: 640px; top: 610px; border: 1px solid black;">	
+        <div style = "background-color: black; color: white; font-size: large; font-family: 'Times New Roman', Times, serif;font-weight: 600;">Consumption Manager</div> <br>	
+    
+        Select what to consume and from where: </br><br>	
+
+    <select id = "consumFactory"></select> <button id = "selectCons" class="btn" onclick="setLimCons()">Select</button> </br><br>
+
+    Units:		
+    <input type="range" min="0" max="0" value="0" id = "consumInputQn" style="width: 200px;"> <br><br>
+    <button id = "Cons" class = "btn" onclick="Consume()">Consume</button></br>
+    </div>   
+</body>	
+</html>
