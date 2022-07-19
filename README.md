@@ -11,4 +11,5 @@ This repository currently has 2 files:
 2. A tool that converts some basic parameters (such as the number of players, faces on the die, vector of inventories, number of commodities, number of firms etc.) into an extended form game, in a format compatible with my 'Game Tree Solver' (developed with Python)
 
 To know more about the project, send an email to kpishanh@gmail.com
-Visit my websiteL https://sites.google.com/view/ishankhazarika/
+
+Visit my website https://sites.google.com/view/ishankhazarika/
