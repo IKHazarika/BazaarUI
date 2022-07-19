@@ -8,7 +8,7 @@ It has tools for randomised implementation of policy tools (in a cross section) 
 This repository currently has 2 files:
 
 1. A prototype of the UI with a playable version, but devoid of policy experiments (developed with JS-CSS-HTML)
-2. A tool that converts some basic parameters (such as the number of players, faces on the die, vector of inventories, number of commodities, number of firms etc.) into an extended form game, in a format compatible with my 'Game Tree Solver' (developed with Python)
+2. A tool that converts some basic parameters (such as the number of players, faces on the die, vector of inventories, number of commodities, number of firms etc.) into an extended form game, in a format compatible with my 'Game Tree Solver' (https://github.com/IKHazarika/GameTreeSolver) (developed with Python)
 
 To know more about the project, send an email to kpishanh@gmail.com
 
